@@ -5,3 +5,5 @@ class Aluno:
         self.CPF = CPF
         self.Email = Email
         self.Senha = Senha
+        self.ListaLivros = [] 
+        self.ListaNotificacoes = []

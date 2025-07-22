@@ -1,11 +1,12 @@
-class Armario:
-    def __init__(self, id, livros=None,disponibilidade="Disponível",lista_aluno,lista_livro):
+import random
+from Service.ArmarioService import ArmarioService
+from Patterns.Prototype import Prototype 
 
+
+
+class Armario(Prototype):
+    def __init__(self, id=None, IdLivros=None,disponibilidade="Disponível"):
         self.Id = id
-        self.Livros = livros if livros is not None else []
+        self.Livros = []
         self.Disponibilidade = disponibilidade
-        self.Aluno = []
-        self.Livro =
-
-class AddLivro:
-    def __init__
+            

@@ -1,6 +1,7 @@
 from datetime import datetime
+from Patterns.Prototype import Prototype
 
-class QrCode:
+class QrCode(Prototype):
     def __init__(self, Id, Aluno, Livro, Status, Prazo=14):
         self.Id = Id
         self.Aluno = Aluno

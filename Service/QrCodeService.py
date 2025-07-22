@@ -46,7 +46,3 @@ class QrCodeService:
             if qr.Id == Id:
                 return qr
         return None
-
-            
-
-     
