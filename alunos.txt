@@ -1,2 +1,0 @@
-1;Lucas Santos;2023001;1234;email@gmail.com
-2;Maria Oliveira;2023002;emaail@gmail.com
