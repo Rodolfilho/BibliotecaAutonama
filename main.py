@@ -94,29 +94,6 @@ class SistemaBiblioteca:
         elif opcao == "4":
             exit()
 
-    def menu_usuario(self):
-        print(f"\n--- Bem-vindo, {self.usuario_logado} ---")
-        print("1. Adicionar Livro")
-        print("2. Ver Catálogo")
-        print("3. Alugar Livro")
-        print("4. Meus Livros")
-        print("5. Histórico de Livro")
-        print("6. Logout")
-        opcao = input("Escolha: ")
-        
-        if opcao == "1":
-            self.adicionar_livro()
-        elif opcao == "2":
-            self.ver_catalogo()
-        elif opcao == "3":
-            self.alugar_livro()
-        elif opcao == "4":
-            self.meus_livros()
-        elif opcao == "5":
-            self.historico_livro()
-        elif opcao == "6":
-            self.usuario_logado = None
-
     def cadastrar_usuario(self):
         username = input("Usuário: ")
         senha = input("Senha: ")
@@ -144,7 +121,6 @@ class SistemaBiblioteca:
     def ver_catalogo(self):
         print("\n--- Catálogo Completo ---")
         for livro in self.facade.ver_catalogo():
-            # Verificar se o livro é do usuário logado
             meu_livro = "[MEU LIVRO]" if livro['dono'] == self.usuario_logado else ""
             
             status = "Disponível" if livro['disponivel'] == 'True' else f"Alugado por {livro['alugado_por']}"
