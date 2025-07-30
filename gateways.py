@@ -98,7 +98,6 @@ class LivroGateway:
             return True
         return False
     
-    # NOVO: Excluir livro
     def excluir(self, livro_id):
         livros = []
         encontrado = False

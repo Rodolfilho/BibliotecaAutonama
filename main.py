@@ -48,7 +48,7 @@ class SistemaBiblioteca:
         print("1. Adicionar Livro")
         print("2. Ver Catálogo")
         print("3. Alugar Livro")
-        print("4. Devolver Livro")  # Nova opção
+        print("4. Devolver Livro") 
         print("5. Meus Livros")
         print("6. Histórico de Livro")
         print("7. Logout")
@@ -60,7 +60,7 @@ class SistemaBiblioteca:
             self.ver_catalogo()
         elif opcao == "3":
             self.alugar_livro()
-        elif opcao == "4":  # Nova opção
+        elif opcao == "4": 
             self.devolver_livro()
         elif opcao == "5":
             self.meus_livros()

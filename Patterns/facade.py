@@ -32,7 +32,6 @@ class BibliotecaFacade:
     def alugar_livro(self, livro_id, locatario):
         livro = self.book_service.buscar_por_id(livro_id)
         
-        # Verificar se é o próprio livro do usuário
         if livro and livro['dono'] == locatario:
             return "proprio_livro"
             
@@ -50,12 +49,12 @@ class BibliotecaFacade:
     def devolver_livro(self, livro_id, locatario):
         livro = self.book_service.buscar_por_id(livro_id)
         if livro and livro['alugado_por'] == locatario:
-            # Atualizar status do livro
+
             livro['disponivel'] = 'True'
             livro['alugado_por'] = ''
             
             if self.book_service.atualizar_livro(livro_id, **livro):
-                # Registrar devolução no histórico
+
                 self.caretaker.adicionar_memento(
                     livro_id, 
                     f"Devolvido por {locatario} para {livro['dono']}"
@@ -66,7 +65,6 @@ class BibliotecaFacade:
     def ver_historico_livro(self, livro_id):
         return self.caretaker.obter_historico(livro_id)
     
-    # NOVO: Excluir livro
     def excluir_livro(self, livro_id, dono):
         livro = self.book_service.buscar_por_id(livro_id)
         if livro and livro['dono'] == dono:
@@ -75,7 +73,6 @@ class BibliotecaFacade:
                 return True
         return False
     
-    # NOVO: Atualizar livro
     def atualizar_livro(self, livro_id, dono, **dados):
         livro = self.book_service.buscar_por_id(livro_id)
         if livro and livro['dono'] == dono:
@@ -83,7 +80,6 @@ class BibliotecaFacade:
                 # Registrar alterações no histórico
                 alteracoes = []
                 for campo, valor in dados.items():
-                    if valor:  # Ignorar campos vazios
                         alteracoes.append(f"{campo} alterado para {valor}")
                 
                 if alteracoes:
