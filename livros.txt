@@ -4,3 +4,6 @@
 4;Maus;Spiegelman;1986;ana;False;rodolfo
 5;Entendendo Algoritmos;Adyta;2017;rodolfo;True;
 6;diario de um banana;jk;2016;rodolfo;False;ana
+7;Rainha Do Gelo;Allen RT;2021;ana;True;
+8;homem aranha;bk;2012;rodolfo;True;
+9;Alice No Pais Das Maravilhas;Ema Frank;1998;ana;True;

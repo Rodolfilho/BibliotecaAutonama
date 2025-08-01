@@ -22,7 +22,7 @@ class BibliotecaFacade:
         self.caretaker.adicionar_memento(livro_id, f"Livro adicionado por {dono}")
 
         #ADD adicionar oberservador(proprietario)
-        self.notificador.adicionar_observer(LivroObserver(dono))
+        self.notificador.adicionar_observer(LivroObserver(livro['dono']))
         return livro_id
 
     def ver_catalogo(self):
@@ -44,22 +44,22 @@ class BibliotecaFacade:
                     livro_id, 
                     f"Alugado por {locatario} (de: {livro['dono']})"
                 )
+                ##print("Observers registrados:", self.notificador._observers)
                 self.notificador.notificar(livro, locatario) #ADD notificar o dono apenas o observador
             return "sucesso"
         return "erro"
     
     def devolver_livro(self, livro_id, locatario):
         livro = self.book_service.buscar_por_id(livro_id)
-        if livro and livro['alugado_por'] == locatario:
+        if livro and livro.get('alugado_por') == locatario:
 
-            livro['disponivel'] = 'True'
+            livro['disponivel'] = True   # Corrigido para boolean
             livro['alugado_por'] = ''
-            
-            if self.book_service.atualizar_livro(livro_id, **livro):
 
+            if self.book_service.atualizar_livro(livro_id, **livro):
                 self.caretaker.adicionar_memento(
                     livro_id, 
-                    f"Devolvido por {locatario} para {livro['dono']}"
+                    f"Devolvido por {locatario} para {livro.get('dono', 'desconhecido')}"
                 )
                 self.notificador.notificar(livro, locatario)
                 return True
