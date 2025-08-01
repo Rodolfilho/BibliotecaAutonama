@@ -1,1 +1,5 @@
-1;Senhor dos aneis;token;2005;rodolfo;False;rodolfo
+1;Senhor dos aneis;token;2005;rodolfo;True;
+2;Harry Potter ;JK;2005;rodolfo;False;ana
+3;A Rainha Vermelha ;Victoria;2015;ana;True;
+4;Maus;Spiegelman;1986;ana;True;
+5;Entendendo Algoritmos;Adyta;2017;rodolfo;True;

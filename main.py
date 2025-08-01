@@ -4,6 +4,7 @@ from patterns.factory import LivroFactory
 from patterns.memento import LivroCaretaker
 from services import UsuarioService, LivroService
 from gateways import UsuarioGateway, LivroGateway
+import random
 
 class SistemaBiblioteca:
     def __init__(self):
@@ -138,6 +139,8 @@ class SistemaBiblioteca:
         
         if resultado == "sucesso":
             print("Livro alugado com sucesso!")
+            qr_code = self.gerar_qr_code()
+            print("Qr Code gerado:", qr_code)
         elif resultado == "proprio_livro":
             print("Você não pode alugar seu próprio livro!")
         else:
@@ -147,6 +150,8 @@ class SistemaBiblioteca:
         livro_id = input("ID do livro para devolver: ")
         if self.facade.devolver_livro(livro_id, self.usuario_logado):
             print("Livro devolvido com sucesso!")
+            qr_code = self.gerar_qr_code()
+            print("Qr Code gerado:", qr_code)
         else:
             print("Você não alugou este livro ou ID inválido!")
 
@@ -206,6 +211,10 @@ class SistemaBiblioteca:
                 print(f"{i}. {estado}")
         else:
             print("Livro não encontrado ou sem histórico")
+
+    def gerar_qr_code(self):
+        num = [random.randint(0, 9) for _ in range(5)]
+        return "".join(str(random.randint(0, 9)) for _ in range(5))
 
 if __name__ == "__main__":
     sistema = SistemaBiblioteca()
