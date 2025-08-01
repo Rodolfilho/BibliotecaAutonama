@@ -9,7 +9,6 @@ class BibliotecaFacade:
         self.book_factory = book_factory
         self.caretaker = caretaker
         self.notificador = Subject()
-        self.notificador.adicionar_observer(LivroObserver())
 
     def cadastrar_usuario(self, username, senha):
         return self.user_service.cadastrar(username, senha)
@@ -21,6 +20,9 @@ class BibliotecaFacade:
         livro = self.book_factory.criar_livro(titulo, autor, ano, dono)
         livro_id = self.book_service.adicionar_livro(livro)
         self.caretaker.adicionar_memento(livro_id, f"Livro adicionado por {dono}")
+
+        #ADD adicionar oberservador(proprietario)
+        self.notificador.adicionar_observer(LivroObserver(dono))
         return livro_id
 
     def ver_catalogo(self):
@@ -42,7 +44,7 @@ class BibliotecaFacade:
                     livro_id, 
                     f"Alugado por {locatario} (de: {livro['dono']})"
                 )
-                self.notificador.notificar(livro, locatario)
+                self.notificador.notificar(livro, locatario) #ADD notificar o dono apenas o observador
             return "sucesso"
         return "erro"
     
@@ -59,6 +61,7 @@ class BibliotecaFacade:
                     livro_id, 
                     f"Devolvido por {locatario} para {livro['dono']}"
                 )
+                self.notificador.notificar(livro, locatario)
                 return True
         return False
     
