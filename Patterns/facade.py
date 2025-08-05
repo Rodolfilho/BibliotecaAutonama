@@ -1,8 +1,9 @@
 from patterns.observer import Subject, LivroObserver
 from patterns.command import AlugarLivroCommand, DevolverLivroCommand
+from patterns.strategy import AutenticacaoEmail, AutenticacaoUsuario
 
 class BibliotecaFacade:
-    def __init__(self, auth_strategy, user_service, book_service, book_factory, caretaker):
+    def __init__(self, user_service, book_service, book_factory, caretaker, auth_strategy=None):
         self.auth_strategy = auth_strategy
         self.user_service = user_service
         self.book_service = book_service
@@ -19,8 +20,13 @@ class BibliotecaFacade:
     def cadastrar_usuario(self, username,email, senha):
         return self.user_service.cadastrar(username, email, senha)
 
-    def login(self, username, senha):
-        return self.auth_strategy.autenticar(username, senha)
+    def login(self, identificador, senha):
+        if '@' in identificador:  # Assume que é um email
+            self.auth_strategy = AutenticacaoEmail(self.user_service.gateway)
+        else:  # Assume que é um username
+            self.auth_strategy = AutenticacaoUsuario(self.user_service.gateway)
+    
+        return self.auth_strategy.autenticar(identificador, senha)
 
     def adicionar_livro(self, titulo, autor, ano, dono):
         livro = self.book_factory.criar_livro(titulo, autor, ano, dono)

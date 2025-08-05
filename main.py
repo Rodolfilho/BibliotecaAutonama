@@ -1,5 +1,5 @@
 from patterns.facade import BibliotecaFacade
-from patterns.strategy import AutenticacaoTXT
+from patterns.strategy import AutenticacaoEmail, AutenticacaoUsuario
 from patterns.factory import LivroFactory
 from patterns.memento import LivroCaretaker
 from services import UsuarioService, LivroService
@@ -12,7 +12,6 @@ class SistemaBiblioteca:
         book_gateway = LivroGateway()
         
         self.facade = BibliotecaFacade(
-            auth_strategy=AutenticacaoTXT(user_gateway),
             user_service=UsuarioService(user_gateway),
             book_service=LivroService(book_gateway),
             book_factory=LivroFactory(),
@@ -105,10 +104,10 @@ class SistemaBiblioteca:
             print("Usuário ou email já existe!")
 
     def login(self):
-        username = input("Usuário: ")
+        identificador = input("Usuário ou Email: ")
         senha = input("Senha: ")
-        if self.facade.login(username, senha):
-            self.usuario_logado = username
+        if self.facade.login(identificador, senha):
+            self.usuario_logado = identificador
             print("Login realizado!")
         else:
             print("Credenciais inválidas!")
