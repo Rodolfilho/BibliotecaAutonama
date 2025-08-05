@@ -1,5 +1,5 @@
 from patterns.observer import Subject, LivroObserver
-from patterns.command import AlugarLivroCommand
+from patterns.command import AlugarLivroCommand, DevolverLivroCommand
 
 class BibliotecaFacade:
     def __init__(self, auth_strategy, user_service, book_service, book_factory, caretaker):
@@ -52,11 +52,9 @@ class BibliotecaFacade:
     def devolver_livro(self, livro_id, locatario):
         livro = self.book_service.buscar_por_id(livro_id)
         if livro and livro.get('alugado_por') == locatario:
-
-            livro['disponivel'] = True   # Corrigido para boolean
-            livro['alugado_por'] = ''
-
-            if self.book_service.atualizar_livro(livro_id, **livro):
+            command = DevolverLivroCommand(self.book_service, livro_id, locatario)
+            
+            if command.executar():
                 self.caretaker.adicionar_memento(
                     livro_id, 
                     f"Devolvido por {locatario} para {livro.get('dono', 'desconhecido')}"
@@ -64,6 +62,7 @@ class BibliotecaFacade:
                 self.notificador.notificar(livro, locatario)
                 return True
         return False
+
     
     def ver_historico_livro(self, livro_id):
         return self.caretaker.obter_historico(livro_id)

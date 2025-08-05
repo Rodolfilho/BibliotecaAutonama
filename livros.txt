@@ -6,4 +6,5 @@
 6;diario de um banana;jk;2016;rodolfo;False;ana
 7;Rainha Do Gelo;Allen RT;2021;ana;True;
 8;homem aranha;bk;2012;rodolfo;True;
-9;Alice No Pais Das Maravilhas;Ema Frank;1998;ana;True;
+9;Alice No Pais Das Maravilhas;Ema Frank;1998;ana;False;rodolfo
+10;O Menino De Pijama;Bhraim;2015;ana;False;rodolfo
