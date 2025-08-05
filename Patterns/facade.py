@@ -21,6 +21,8 @@ class BibliotecaFacade:
         return self.user_service.cadastrar(username, email, senha)
 
     def login(self, identificador, senha):
+
+
         if '@' in identificador:  # Assume que é um email
             self.auth_strategy = AutenticacaoEmail(self.user_service.gateway)
         else:  # Assume que é um username

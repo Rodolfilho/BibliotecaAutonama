@@ -106,8 +106,14 @@ class SistemaBiblioteca:
     def login(self):
         identificador = input("Usuário ou Email: ")
         senha = input("Senha: ")
+
         if self.facade.login(identificador, senha):
-            self.usuario_logado = identificador
+            if '@' in identificador:
+                usuario = self.facade.user_service.gateway.buscar_por_email(identificador)
+            else:
+                usuario = self.facade.user_service.gateway.buscar_por_username(identificador)
+
+            self.usuario_logado = usuario['username'] if usuario else identificador
             print("Login realizado!")
         else:
             print("Credenciais inválidas!")
