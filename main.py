@@ -95,6 +95,7 @@ class SistemaBiblioteca:
             exit()
 
     def cadastrar_usuario(self):
+        print("\n--- Cadastro ---")
         username = input("Usuário: ")
         email = input("Email: ")
         senha = input("Senha: ")
@@ -104,6 +105,7 @@ class SistemaBiblioteca:
             print("Usuário ou email já existe!")
 
     def login(self):
+        print("\n--- Login ---")
         identificador = input("Usuário ou Email: ")
         senha = input("Senha: ")
 

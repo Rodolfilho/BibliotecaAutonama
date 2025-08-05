@@ -1,12 +1,13 @@
 from abc import ABC, abstractmethod
 
-class AutenticacaoStrategy(ABC):
+class AutenticacaoStrategy(ABC): #Define a estrutura das classes de autenticação
     @abstractmethod
     def autenticar(self, identificador, senha):
         pass
 
-class AutenticacaoUsuario(AutenticacaoStrategy):
-    def __init__(self, user_gateway):  # ADICIONAR ESTE CONSTRUTOR
+#Herda os parametros para buscar o usuario e vefificar a senha 
+class AutenticacaoUsuario(AutenticacaoStrategy): 
+    def __init__(self, user_gateway):  
         self.user_gateway = user_gateway
         
     def autenticar(self, username, senha):
