@@ -8,7 +8,13 @@ class BibliotecaFacade:
         self.book_service = book_service
         self.book_factory = book_factory
         self.caretaker = caretaker
-        self.notificador = Subject()
+        self.notificador = Subject() 
+
+        livros = book_service.listar_todos() #ADD correcao para pegar todos os obervadores salvos
+        donos_unicos = set(livro['dono'] for livro in livros)
+
+        for dono in donos_unicos:
+            self.notificador.adicionar_observer(LivroObserver(dono))
 
     def cadastrar_usuario(self, username, senha):
         return self.user_service.cadastrar(username, senha)
