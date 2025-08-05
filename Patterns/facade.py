@@ -16,8 +16,8 @@ class BibliotecaFacade:
         for dono in donos_unicos:
             self.notificador.adicionar_observer(LivroObserver(dono))
 
-    def cadastrar_usuario(self, username, senha):
-        return self.user_service.cadastrar(username, senha)
+    def cadastrar_usuario(self, username,email, senha):
+        return self.user_service.cadastrar(username, email, senha)
 
     def login(self, username, senha):
         return self.auth_strategy.autenticar(username, senha)

@@ -2,10 +2,10 @@ class UsuarioService:
     def __init__(self, gateway):
         self.gateway = gateway
         
-    def cadastrar(self, username, senha):
-        if self.gateway.buscar_por_username(username):
+    def cadastrar(self, username,email, senha):     #vefifica se o usuario ja existe antes de salvar
+        if self.gateway.buscar_por_username(username) or self.gateway.buscar_por_email(email):
             return False
-        self.gateway.salvar(username, senha)
+        self.gateway.salvar(username, email, senha)
         return True
         
     #def autenticar(self, username, senha):

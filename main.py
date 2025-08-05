@@ -97,11 +97,12 @@ class SistemaBiblioteca:
 
     def cadastrar_usuario(self):
         username = input("Usuário: ")
+        email = input("Email: ")
         senha = input("Senha: ")
-        if self.facade.cadastrar_usuario(username, senha):
+        if self.facade.cadastrar_usuario(username, email, senha):
             print("Cadastro realizado!")
         else:
-            print("Usuário já existe!")
+            print("Usuário ou email já existe!")
 
     def login(self):
         username = input("Usuário: ")
