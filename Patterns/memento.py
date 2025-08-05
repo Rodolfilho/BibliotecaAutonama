@@ -1,5 +1,5 @@
 class LivroMemento:
-    def __init__(self, estado):
+    def __init__(self, estado): #Objeto armazenado
         self.estado = estado
         self.data = self._obter_data_hora()
     
@@ -10,7 +10,7 @@ class LivroMemento:
     def __str__(self):
         return f"[{self.data}] {self.estado}"
 
-class LivroCaretaker:
+class LivroCaretaker: #Guarda o historico // Salva apenas na memoria ram
     def __init__(self):
         self.historico = {}
     

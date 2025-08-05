@@ -1,4 +1,7 @@
-class AutenticacaoStrategy:
+from abc import ABC, abstractmethod
+
+class AutenticacaoStrategy(ABC):
+    @abstractmethod
     def autenticar(self, username, senha):
         pass
 

@@ -2,6 +2,7 @@ class Command:
     def executar(self):
         pass
 
+#Funcionalidades mais utilizadas no sistema
 class AlugarLivroCommand(Command):
     def __init__(self, book_service, livro_id, locatario):
         self.book_service = book_service
