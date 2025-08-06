@@ -1,26 +1,42 @@
-from patterns.observer import Subject, LivroObserver
-from patterns.command import AlugarLivroCommand
+from patterns.Observer import Subject, LivroObserver
+from patterns.command import AlugarLivroCommand, DevolverLivroCommand
+from patterns.strategy import AutenticacaoEmail, AutenticacaoUsuario
 
 class BibliotecaFacade:
-    def __init__(self, auth_strategy, user_service, book_service, book_factory, caretaker):
+    def __init__(self, user_service, book_service, book_factory, caretaker, auth_strategy=None):
         self.auth_strategy = auth_strategy
         self.user_service = user_service
         self.book_service = book_service
         self.book_factory = book_factory
         self.caretaker = caretaker
-        self.notificador = Subject()
-        self.notificador.adicionar_observer(LivroObserver())
+        self.notificador = Subject() 
 
-    def cadastrar_usuario(self, username, senha):
-        return self.user_service.cadastrar(username, senha)
+        livros = book_service.listar_todos() #ADD correcao para pegar todos os obervadores salvos
+        donos_unicos = set(livro['dono'] for livro in livros)
 
-    def login(self, username, senha):
-        return self.auth_strategy.autenticar(username, senha)
+        for dono in donos_unicos:
+            self.notificador.adicionar_observer(LivroObserver(dono))
+
+    def cadastrar_usuario(self, username,email, senha):
+        return self.user_service.cadastrar(username, email, senha)
+
+    def login(self, identificador, senha):
+
+
+        if '@' in identificador:  # Assume que é um email
+            self.auth_strategy = AutenticacaoEmail(self.user_service.gateway)
+        else:  # Assume que é um username
+            self.auth_strategy = AutenticacaoUsuario(self.user_service.gateway)
+    
+        return self.auth_strategy.autenticar(identificador, senha)
 
     def adicionar_livro(self, titulo, autor, ano, dono):
         livro = self.book_factory.criar_livro(titulo, autor, ano, dono)
         livro_id = self.book_service.adicionar_livro(livro)
         self.caretaker.adicionar_memento(livro_id, f"Livro adicionado por {dono}")
+
+        #ADD adicionar oberservador(proprietario)
+        self.notificador.adicionar_observer(LivroObserver(livro['dono']))
         return livro_id
 
     def ver_catalogo(self):
@@ -42,25 +58,25 @@ class BibliotecaFacade:
                     livro_id, 
                     f"Alugado por {locatario} (de: {livro['dono']})"
                 )
-                self.notificador.notificar(livro, locatario)
+                ##print("Observers registrados:", self.notificador._observers)
+                self.notificador.notificar(livro, locatario) #ADD notificar o dono apenas o observador
             return "sucesso"
         return "erro"
     
     def devolver_livro(self, livro_id, locatario):
         livro = self.book_service.buscar_por_id(livro_id)
-        if livro and livro['alugado_por'] == locatario:
-
-            livro['disponivel'] = 'True'
-            livro['alugado_por'] = ''
+        if livro and livro.get('alugado_por') == locatario:
+            command = DevolverLivroCommand(self.book_service, livro_id, locatario)
             
-            if self.book_service.atualizar_livro(livro_id, **livro):
-
+            if command.executar():
                 self.caretaker.adicionar_memento(
                     livro_id, 
-                    f"Devolvido por {locatario} para {livro['dono']}"
+                    f"Devolvido por {locatario} para {livro.get('dono', 'desconhecido')}"
                 )
+                self.notificador.notificar(livro, locatario)
                 return True
         return False
+
     
     def ver_historico_livro(self, livro_id):
         return self.caretaker.obter_historico(livro_id)

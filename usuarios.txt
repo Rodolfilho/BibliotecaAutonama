@@ -1,2 +1,3 @@
-rodolfo;12345
-ana;54321
+rodolfo;rodolfo@gmail.com;12345
+ana;ana@gmail.com;54321
+raul;raul@gmail.com;12345

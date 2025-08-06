@@ -1,0 +1,14 @@
+<<<<<<< HEAD
+=======
+1;Senhor dos aneis;token;2005;rodolfo;True;
+2;Harry Potter ;JK;2005;rodolfo;True;
+3;A Rainha Vermelha ;Victoria;2015;ana;True;
+4;Maus;Spiegelman;1986;ana;False;rodolfo
+5;Entendendo Algoritmos;Adyta;2017;rodolfo;True;
+6;diario de um banana;jk;2016;rodolfo;False;ana
+7;Rainha Do Gelo;Allen RT;2021;ana;True;
+8;homem aranha;bk;2012;rodolfo;True;
+9;Alice No Pais Das Maravilhas;Ema Frank;1998;ana;True;
+10;O Menino De Pijama;Bhraim;2015;ana;True;
+11;Algoritmos Teoria E Pratica;Thomas Cormen;2016;raul;True;
+>>>>>>> acec83c2ddb3401b5b29e8b669d5090b98a2b7e1

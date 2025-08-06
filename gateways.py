@@ -1,17 +1,33 @@
 class UsuarioGateway:
-    def salvar(self, username, senha):
+    def salvar(self, username, email, senha):
         with open("usuarios.txt", "a") as f:
-            f.write(f"{username};{senha}\n")
+            f.write(f"{username};{email};{senha}\n")
 
     def buscar_por_username(self, username):
         try:
             with open("usuarios.txt", "r") as f:
                 for linha in f:
                     dados = linha.strip().split(';')
-                    if len(dados) >= 2 and dados[0] == username:
+                    if len(dados) >= 3 and dados[0] == username:
                         return {
                             "username": dados[0],
-                            "senha": dados[1]
+                            "email": dados[1],
+                            "senha": dados[2]
+                        }
+        except FileNotFoundError:
+            return None
+        return None
+    
+    def buscar_por_email(self, email):
+        try:
+            with open("usuarios.txt", "r") as f:
+                for linha in f:
+                    dados = linha.strip().split(';')
+                    if len(dados) >= 3 and dados[1] == email:
+                        return {
+                            "username": dados[0],
+                            "email": dados[1],
+                            "senha": dados[2]
                         }
         except FileNotFoundError:
             return None
