@@ -1,4 +1,4 @@
-from patterns.Observer import Subject, LivroObserver
+from patterns.observer import Subject, LivroObserver
 from patterns.command import AlugarLivroCommand, DevolverLivroCommand
 from patterns.strategy import AutenticacaoEmail, AutenticacaoUsuario
 

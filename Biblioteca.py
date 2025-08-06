@@ -1,18 +1,17 @@
 from patterns.facade import BibliotecaFacade
-from patterns.strategy import AutenticacaoStrategy, AutenticacaoUsuario, AutenticacaoEmail
+from patterns.strategy import AutenticacaoEmail, AutenticacaoUsuario
 from patterns.factory import LivroFactory
 from patterns.memento import LivroCaretaker
 from services import UsuarioService, LivroService
 from gateways import UsuarioGateway, LivroGateway
-
+import random
 
 class SistemaBiblioteca:
     def __init__(self):
         user_gateway = UsuarioGateway()
         book_gateway = LivroGateway()
-        
+
         self.facade = BibliotecaFacade(
-            auth_strategy=AutenticacaoUsuario(user_gateway),
             user_service=UsuarioService(user_gateway),
             book_service=LivroService(book_gateway),
             book_factory=LivroFactory(),
@@ -34,7 +33,7 @@ class SistemaBiblioteca:
         print("3. Ver Catálogo")
         print("4. Sair")
         opcao = input("Escolha: ")
-        
+
         if opcao == "1":
             self.cadastrar_usuario()
         elif opcao == "2":
@@ -54,7 +53,7 @@ class SistemaBiblioteca:
         print("6. Histórico de Livro")
         print("7. Logout")
         opcao = input("Escolha: ")
-        
+
         if opcao == "1":
             self.adicionar_livro()
         elif opcao == "2":
@@ -85,7 +84,7 @@ class SistemaBiblioteca:
         print("3. Ver Catálogo")
         print("4. Sair")
         opcao = input("Escolha: ")
-        
+
         if opcao == "1":
             self.cadastrar_usuario()
         elif opcao == "2":
@@ -96,18 +95,27 @@ class SistemaBiblioteca:
             exit()
 
     def cadastrar_usuario(self):
+        print("\n--- Cadastro ---")
         username = input("Usuário: ")
+        email = input("Email: ")
         senha = input("Senha: ")
-        if self.facade.cadastrar_usuario(username, senha):
+        if self.facade.cadastrar_usuario(username, email, senha):
             print("Cadastro realizado!")
         else:
-            print("Usuário já existe!")
+            print("Usuário ou email já existe!")
 
     def login(self):
-        username = input("Usuário: ")
+        print("\n--- Login ---")
+        identificador = input("Usuário ou Email: ")
         senha = input("Senha: ")
-        if self.facade.login(username, senha):
-            self.usuario_logado = username
+
+        if self.facade.login(identificador, senha):
+            if '@' in identificador:
+                usuario = self.facade.user_service.gateway.buscar_por_email(identificador)
+            else:
+                usuario = self.facade.user_service.gateway.buscar_por_username(identificador)
+
+            self.usuario_logado = usuario['username'] if usuario else identificador
             print("Login realizado!")
         else:
             print("Credenciais inválidas!")
@@ -123,7 +131,7 @@ class SistemaBiblioteca:
         print("\n--- Catálogo Completo ---")
         for livro in self.facade.ver_catalogo():
             meu_livro = "[MEU LIVRO]" if livro['dono'] == self.usuario_logado else ""
-            
+
             status = "Disponível" if livro['disponivel'] == 'True' else f"Alugado por {livro['alugado_por']}"
             print(f"ID: {livro['id']} {meu_livro}")
             print(f"Título: {livro['titulo']}")
@@ -136,9 +144,11 @@ class SistemaBiblioteca:
     def alugar_livro(self):
         livro_id = input("ID do livro para alugar: ")
         resultado = self.facade.alugar_livro(livro_id, self.usuario_logado)
-        
+
         if resultado == "sucesso":
             print("Livro alugado com sucesso!")
+            qr_code = self.gerar_qr_code()
+            print("Qr Code gerado:", qr_code)
         elif resultado == "proprio_livro":
             print("Você não pode alugar seu próprio livro!")
         else:
@@ -148,6 +158,8 @@ class SistemaBiblioteca:
         livro_id = input("ID do livro para devolver: ")
         if self.facade.devolver_livro(livro_id, self.usuario_logado):
             print("Livro devolvido com sucesso!")
+            qr_code = self.gerar_qr_code()
+            print("Qr Code gerado:", qr_code)
         else:
             print("Você não alugou este livro ou ID inválido!")
 
@@ -155,21 +167,21 @@ class SistemaBiblioteca:
         while True:
             print(f"\n--- Meus Livros ({self.usuario_logado}) ---")
             livros = self.facade.meus_livros(self.usuario_logado)
-            
+
             if not livros:
                 print("Você ainda não tem livros cadastrados.")
                 return
-                
+
             for livro in livros:
                 status = "Disponível" if livro['disponivel'] == 'True' else f"Alugado por {livro['alugado_por']}"
                 print(f"ID: {livro['id']} | Título: {livro['titulo']} | Status: {status}")
-            
+
             print("\n1. Adicionar mais livros")
             print("2. Excluir livro")
             print("3. Atualizar livro")
             print("4. Voltar")
             opcao = input("Escolha: ")
-            
+
             if opcao == "1":
                 self.adicionar_livro()
             elif opcao == "2":
@@ -183,7 +195,7 @@ class SistemaBiblioteca:
                 novo_titulo = input("Novo título (deixe em branco para manter): ")
                 novo_autor = input("Novo autor (deixe em branco para manter): ")
                 novo_ano = input("Novo ano (deixe em branco para manter): ")
-                
+
                 if self.facade.atualizar_livro(
                     livro_id, 
                     self.usuario_logado,
@@ -200,7 +212,7 @@ class SistemaBiblioteca:
     def historico_livro(self):
         livro_id = input("ID do livro para ver histórico: ")
         historico = self.facade.ver_historico_livro(livro_id)
-        
+
         if historico:
             print(f"\n--- Histórico do Livro ID: {livro_id} ---")
             for i, estado in enumerate(historico, 1):
@@ -211,3 +223,6 @@ class SistemaBiblioteca:
     def gerar_qr_code(self):
         num = [random.randint(0, 9) for _ in range(5)]
         return "".join(str(random.randint(0, 9)) for _ in range(5))
+
+if __name__ == "__main__":
+    sistema = SistemaBiblioteca()
