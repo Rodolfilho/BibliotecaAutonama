@@ -18,7 +18,6 @@ O projeto foi desenvolvido utilizando **padrões de projeto** para garantir cód
 
 ## 🛠️ Tecnologias Utilizadas
 - **Python 3.x**
-- **qrcode** → Geração de QR Codes.
 - Estrutura modular com **arquitetura de pacotes** (`patterns`, `services`, `gateways`).
 
 ---
